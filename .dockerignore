@@ -1,0 +1,52 @@
+# Ignore version control files
+.git
+.gitignore
+
+# Ignore development and editor files
+*.pyc
+*.pyo
+*.pyd
+*.swp
+*.swo
+*.log
+.vscode/
+
+# Ignore database files and migrations
+db.sqlite3
+*/migrations/
+*/__pycache__/
+
+# Ignore static and media files (can be collected during the build)
+staticfiles/
+media/
+
+# Ignore temporary files and cache directories
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+__pycache__/
+
+# Ignore test and coverage files
+.coverage
+htmlcov/
+
+# Ignore other project-specific files and directories
+secret_key.txt
+*.pyc
+*.pyo
+*.pyd
+*.egg-info/
+*.egg
+node_modules/
+
+### Django ###
+*.log
+*.pot
+*.pyc
+*.sqlite3
+*.sqlite3-journal
+__pycache__/
+local_settings.py
+media
+

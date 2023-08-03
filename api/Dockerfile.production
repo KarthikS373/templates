@@ -1,0 +1,85 @@
+# Stage 1: Base image for production
+FROM python:3.11-alpine as base
+
+# Set environment variables
+ENV PYTHONDONTWRITEBYTECODE 1
+ENV PYTHONUNBUFFERED 1
+ENV DJANGO_SETTINGS_MODULE api.settings
+
+# Create and set the working directory
+WORKDIR /app
+
+# Stage 2: Builder image for Python dependencies
+FROM base as builder
+
+RUN apk update \
+    && apk --no-cache add python3-dev libpq \
+    && mkdir /install \
+    && pip install --upgrade pip
+
+WORKDIR /install
+COPY requirements.txt ./
+RUN pip install --no-cache-dir --prefix=/install -r ./requirements.txt
+
+# Stage 3: Production image with minimal dependencies
+FROM base as production
+
+# Set build arguments
+ARG USER=user
+ARG USER_UID=1001
+ARG PROJECT_NAME=.
+ARG GUNICORN_PORT=8000
+ARG GUNICORN_WORKERS=2
+# the value is in seconds
+ARG GUNICORN_TIMEOUT=60
+ARG GUNICORN_LOG_LEVEL=error
+ARG DJANGO_BASE_DIR=$PROJECT_NAME
+ARG DJANGO_STATIC_ROOT=/var/www/static
+ARG DJANGO_MEDIA_ROOT=/var/www/media
+# The superuser with the data below will be created only if there are no users in the database!
+ARG DJANGO_SUPERUSER_USERNAME=admin
+ARG DJANGO_SUPERUSER_PASSWORD=admin
+ARG DJANGO_SUPERUSER_EMAIL=admin@domain.com
+
+# Set environment variables
+ENV \
+    USER=$USER \
+    USER_UID=$USER_UID \
+    PROJECT_NAME=$PROJECT_NAME \
+    GUNICORN_PORT=$GUNICORN_PORT \
+    GUNICORN_WORKERS=$GUNICORN_WORKERS \
+    GUNICORN_TIMEOUT=$GUNICORN_TIMEOUT \
+    GUNICORN_LOG_LEVEL=$GUNICORN_LOG_LEVEL \
+    DJANGO_BASE_DIR=$DJANGO_BASE_DIR \
+    DJANGO_STATIC_ROOT=$DJANGO_STATIC_ROOT \
+    DJANGO_MEDIA_ROOT=$DJANGO_MEDIA_ROOT \
+    DJANGO_SQLITE_DIR=$DJANGO_SQLITE_DIR \
+    DJANGO_SUPERUSER_USERNAME=$DJANGO_SUPERUSER_USERNAME \
+    DJANGO_SUPERUSER_PASSWORD=$DJANGO_SUPERUSER_PASSWORD \
+    DJANGO_SUPERUSER_EMAIL=$DJANGO_SUPERUSER_EMAIL
+
+# Copy Python dependencies from the builder image
+COPY --from=builder /install /usr/local
+
+# Copy the Django project files
+COPY $PROJECT_NAME $DJANGO_BASE_DIR
+
+# Create directories and set permissions
+RUN mkdir -p $DJANGO_STATIC_ROOT $DJANGO_MEDIA_ROOT $DJANGO_SQLITE_DIR \
+    && adduser -s /bin/sh -D -u $USER_UID $USER \
+    && chown -R $USER:$USER $DJANGO_BASE_DIR $DJANGO_STATIC_ROOT $DJANGO_MEDIA_ROOT $DJANGO_SQLITE_DIR
+
+# Set the working directory
+WORKDIR $DJANGO_BASE_DIR
+
+# Collect static files
+RUN python manage.py collectstatic --noinput
+
+# Migrate the database
+RUN python manage.py migrate
+
+# Use Gunicorn to serve the application
+CMD ["gunicorn", "--bind", "0.0.0.0:$GUNICORN_PORT", "--workers", "$GUNICORN_WORKERS", "--timeout", "$GUNICORN_TIMEOUT", "--log-level", "$GUNICORN_LOG_LEVEL", "django.wsgi:application"]
+
+# Expose the port for Gunicorn
+EXPOSE $GUNICORN_PORT

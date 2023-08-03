@@ -1,0 +1,84 @@
+# Stage 1: Base image for development
+FROM python:3.11-alpine as development
+
+# Install system dependencies for development and PostgreSQL client
+RUN apk update \
+    && apk --no-cache add su-exec postgresql-dev
+
+# Set environment variables
+ENV PYTHONDONTWRITEBYTECODE 1
+ENV PYTHONUNBUFFERED 1
+ENV DJANGO_SETTINGS_MODULE api.settings
+
+# Create and set the working directory
+WORKDIR /app
+
+# Install additional development dependencies
+RUN apk add --no-cache gcc musl-dev
+
+# Copy entrypoint and command scripts
+COPY docker-entrypoint.sh /
+COPY docker-cmd.sh /
+
+# Set build arguments
+ARG USER=user
+ARG USER_UID=1001
+ARG PROJECT_NAME=.
+ARG GUNICORN_PORT=8000
+ARG GUNICORN_WORKERS=2
+# the value is in seconds
+ARG GUNICORN_TIMEOUT=60
+ARG GUNICORN_LOG_LEVEL=error
+ARG DJANGO_BASE_DIR=/app
+ARG DJANGO_STATIC_ROOT=/var/www/static
+ARG DJANGO_MEDIA_ROOT=/var/www/media
+# The superuser with the data below will be created only if there are no users in the database!
+ARG DJANGO_SUPERUSER_USERNAME=admin
+ARG DJANGO_SUPERUSER_PASSWORD=admin
+ARG DJANGO_SUPERUSER_EMAIL=admin@domain.com
+ARG DJANGO_DEV_SERVER_PORT=8000
+
+# Set environment variables
+ENV \
+    USER=$USER \
+    USER_UID=$USER_UID \
+    PROJECT_NAME=$PROJECT_NAME \
+    GUNICORN_PORT=$GUNICORN_PORT \
+    GUNICORN_WORKERS=$GUNICORN_WORKERS \
+    GUNICORN_TIMEOUT=$GUNICORN_TIMEOUT \
+    GUNICORN_LOG_LEVEL=$GUNICORN_LOG_LEVEL \
+    DJANGO_BASE_DIR=$DJANGO_BASE_DIR \
+    DJANGO_STATIC_ROOT=$DJANGO_STATIC_ROOT \
+    DJANGO_MEDIA_ROOT=$DJANGO_MEDIA_ROOT \
+    DJANGO_SQLITE_DIR=$DJANGO_SQLITE_DIR \
+    DJANGO_SUPERUSER_USERNAME=$DJANGO_SUPERUSER_USERNAME \
+    DJANGO_SUPERUSER_PASSWORD=$DJANGO_SUPERUSER_PASSWORD \
+    DJANGO_SUPERUSER_EMAIL=$DJANGO_SUPERUSER_EMAIL \
+    DJANGO_DEV_SERVER_PORT=$DJANGO_DEV_SERVER_PORT
+
+# Copy Python dependencies and install them
+COPY requirements.txt ./
+RUN pip install --no-cache-dir -r ./requirements.txt
+
+# Copy the Django project files
+COPY . $DJANGO_BASE_DIR
+
+RUN pip freeze
+RUN ls -a
+
+# Create directories and set permissions
+RUN chmod +x /docker-entrypoint.sh /docker-cmd.sh \
+    && mkdir -p $DJANGO_STATIC_ROOT $DJANGO_MEDIA_ROOT $DJANGO_SQLITE_DIR \
+    && adduser -s /bin/sh -D -u $USER_UID $USER \
+    && chown -R $USER:$USER $DJANGO_BASE_DIR $DJANGO_STATIC_ROOT $DJANGO_MEDIA_ROOT $DJANGO_SQLITE_DIR
+
+# Set the working directory
+WORKDIR $DJANGO_BASE_DIR
+
+# Set the entrypoint and command for development
+ENTRYPOINT ["/docker-entrypoint.sh"]
+CMD ["/docker-cmd.sh", "runserver", "0.0.0.0:$DJANGO_DEV_SERVER_PORT"]
+
+# Expose the port for Django development server
+
+EXPOSE $DJANGO_DEV_SERVER_PORT

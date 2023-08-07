@@ -1,0 +1,25 @@
+{
+  "rootDir": "./src",
+  "preset": "ts-jest",
+  "testEnvironment": "jsdom",
+  "coverageDirectory": "coverage",
+  "coverageProvider": "v8",
+  "coveragePathIgnorePatterns": ["/node_modules/"],
+  "testMatch": ["**/*.(test|spec).(ts|tsx|js|jsx)"],
+  "setupFilesAfterEnv": ["<rootDir>/jest.setup.ts", "<rootDir>/test/__mocks__/matchMediaMock.js"],
+  "extensionsToTreatAsEsm": [".ts", ".tsx"],
+  "moduleDirectories": ["node_modules", "./src"],
+  "transform": {
+    "^.+\\.tsx?$": "ts-jest"
+  },
+  "moduleNameMapper": {
+    "\\.(gif|ttf|eot|svg|png)$": "<rootDir>/test/__mocks__/fileMock.js",
+    "\\.(css|less|sass|scss)$": "identity-obj-proxy",
+    "^@/(.*)$": "<rootDir>/$1"
+  },
+  "globals": {
+    "ts-jest": {
+      "useESM": true
+    }
+  }
+}

@@ -1,0 +1,26 @@
+/* Tailwind */
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Reset CSS */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+/* Scrollbar */
+::-webkit-scrollbar {
+  width: 0px;
+}
+
+/* Extend: Tailwind */
+@layer base {
+}
+
+@layer components {
+}
+
+@layer utilities {
+}

@@ -1,0 +1,14 @@
+{
+  "title": "UNO club",
+  "description": "UNO club",
+  "default_og": "/og/logo.png",
+  "website": "https://unoclub.in",
+  "twitter": {
+    "card": "summary",
+    "creator": "unoclub_in",
+    "size": {
+      "width": "400",
+      "height": "400"
+    }
+  }
+}

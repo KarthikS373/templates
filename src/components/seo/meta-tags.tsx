@@ -1,19 +1,21 @@
 import Head from "next/head"
 import type { FC } from "react"
 
-import {
-  default_og as DEFAULT_OG,
-  description as DESCRIPTION,
-  title as APP_NAME,
-  twitter as TWITTER,
-  website as WEBSITE,
-} from "@/data/metadata.json"
+import metadata from "@/data/metadata.json"
 
 interface MetaTagsProps {
   description?: string
   title?: string
   page?: string
 }
+
+const {
+  default_og: DEFAULT_OG,
+  description: DESCRIPTION,
+  title: APP_NAME,
+  twitter: TWITTER,
+  website: WEBSITE,
+} = metadata
 
 const MetaTags: FC<MetaTagsProps> = ({ description = DESCRIPTION, title = APP_NAME, page }) => {
   return (

@@ -1,0 +1,132 @@
+[tool.poetry]
+name = "template-python-cli"
+version = "1.1.14"
+description = "Boilerplate/Template for Python CLI projects"
+authors = ["Brian Zalewski <brian@megabyte.space>"]
+license = "MIT"
+readme = "README.md"
+homepage = "https://megabyte.space"
+documentation = "https://megabyte.space/docs/python/library"
+keywords = ["advanced", "aiohttp", "arrow", "bandit", "beginner", "better-exceptions", "boilerplate", "celery", "cli", "click", "easy", "gitlab-ci", "mblabs", "megabytelabs", "poetry", "professormanhattan", "pyinstaller", "pytest", "python", "python-fire", "rich", "sphinx", "template", "washingtondc"]
+include = ["CHANGELOG.md", "LICENSE"]
+classifiers = [
+  "Development Status :: 4 - Beta",
+  "Development Status :: 5 - Production/Stable",
+  "Environment :: Console",
+  "Environment :: MacOS X",
+  "Environment :: Web Environment",
+  "Framework :: aiohttp",
+  "Framework :: Celery",
+  "Framework :: Flake8",
+  "Framework :: Pytest",
+  "Framework :: Sphinx :: Extension",
+  "Framework :: Sphinx :: Theme",
+  "Framework :: Sphinx",
+  "Intended Audience :: Developers",
+  "Intended Audience :: End Users/Desktop",
+  "Intended Audience :: System Administrators",
+  "License :: OSI Approved :: MIT License",
+  "Natural Language :: English",
+  "Operating System :: MacOS :: MacOS X",
+  "Operating System :: MacOS",
+  "Operating System :: Microsoft :: Windows :: Windows 10",
+  "Operating System :: Microsoft :: Windows",
+  "Operating System :: POSIX :: Linux",
+  "Programming Language :: JavaScript",
+  "Programming Language :: Other Scripting Engines",
+  "Programming Language :: Other",
+  "Programming Language :: Python :: 3 :: Only",
+  "Programming Language :: Python :: 3.10",
+  "Programming Language :: Python :: 3.11",
+  "Programming Language :: Python :: 3.7",
+  "Programming Language :: Python :: 3.8",
+  "Programming Language :: Python :: 3.9",
+  "Programming Language :: Python",
+  "Programming Language :: Unix Shell",
+  "Topic :: Desktop Environment",
+  "Topic :: Documentation :: Sphinx",
+  "Topic :: Documentation",
+  "Topic :: Internet",
+  "Topic :: Software Development :: Build Tools",
+  "Topic :: Software Development :: Documentation",
+  "Topic :: Software Development :: Libraries",
+  "Topic :: Software Development",
+  "Topic :: System :: Installation/Setup",
+  "Topic :: Utilities"
+]
+packages = [
+    { include = "template-python-cli" }
+]
+
+[tool.poetry.dependencies]
+python = ">=3.7.2,<3.11"
+
+# Recommended packages - use these whenever possible
+aiohttp = { version = "^3.7.4", optional = true }
+arrow = { version = "^1.1.1", optional = true }
+better-exceptions = { version = "^0.3.3", optional = true }
+celery = { version = "^5.1.2", optional = true }
+click = { version = "^8.0.3", optional = true }
+fire = { version = "^0.4.0", optional = true }
+furl = { version = "^2.1.2", optional = true }
+requests = { version = "^2.26.0", optional = true }
+rich = { version = "^10.9.0", optional = true }
+schedule = { version = "^1.1.0", optional = true }
+schema = { version = "^0.7.4", optional = true }
+sh = { version = "^1.14.2", optional = true }
+sphinx = { version = "^4.1.2", optional = true }
+sphinx-press-theme = { version = "^0.8.0", optional = true }
+
+# Recommended development packages - encouraged to use these packages
+pysnooper = { version = "^1.0.0", optional = true }
+
+# Semantic extras
+pip = { version = "^21.3.0", optional = true }
+setuptools = { version = "^58.2.0", optional = true }
+twine = { version = "^3.8.0", optional = true }
+wheel = { version = "^0.37.1", optional = true }
+
+[tool.poetry.dev-dependencies]
+flake8-builtins = "^1.5.3"
+flake8-pytest-style = "^1.6.0"
+flake8-simplify = "^0.19.2"
+wemake-python-styleguide = "^0.16.1"
+
+[tool.poetry.extras]
+recommended = [
+  "aiohttp",
+  "arrow",
+  "better-exceptions",
+  "celery",
+  "click",
+  "fire",
+  "furl",
+  "requests",
+  "rich",
+  "schedule",
+  "schema",
+  "sh",
+  "sphinx",
+  "sphinx-press-theme"
+]
+recommendedDev = [
+  "pysnooper"
+]
+semantic = [
+  "pip",
+  "setuptools",
+  "twine",
+  "wheel"
+]
+
+[tool.poetry.urls]
+"Bug Tracker" = "https://gitlab.com/megabyte-labs/templates/python-cli/-/issues"
+"GitHub" = "https://github.com/megabyte-labs/template-python-cli"
+"GitLab" = "https://gitlab.com/megabyte-labs/templates/python-cli"
+"Give Directly" = "https://givedirectly.org"
+"Open Collective" = "https://opencollective.com/megabytelabs"
+"Patreon" = "https://www.patreon.com/ProfessorManhattan"
+
+[build-system]
+requires = ["poetry-core>=1.0.0"]
+build-backend = "poetry.core.masonry.api"

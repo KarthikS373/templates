@@ -2,6 +2,8 @@ import React from "react"
 
 import { Metadata, NextPage } from "next"
 
+import { Home } from "@/views"
+
 interface HomePageProps {}
 
 export const metadata: Metadata = {
@@ -10,7 +12,11 @@ export const metadata: Metadata = {
 }
 
 const HomePage: NextPage<HomePageProps> = () => {
-  return <></>
+  return (
+    <>
+      <Home.Landing />
+    </>
+  )
 }
 
 export default HomePage

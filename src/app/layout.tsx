@@ -1,6 +1,6 @@
-import { Metadata } from "next"
+import React from "react"
 
-import { Provider } from "@/providers"
+import { Metadata } from "next"
 
 import "@/styles/globals.css"
 
@@ -25,7 +25,7 @@ const RootLayout = ({
   return (
     <html lang="en">
       <body className="min-h-screen">
-        <Provider>{children}</Provider>
+        <>{children}</>
       </body>
     </html>
   )
